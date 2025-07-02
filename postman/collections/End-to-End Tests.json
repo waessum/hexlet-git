@@ -1,0 +1,3129 @@
+{
+	"info": {
+		"_postman_id": "7184b2aa-8b7d-437f-8456-c8a5a6d2bc8a",
+		"name": "End-to-End Tests",
+		"description": "> This collection features end-to-end tests that ensure the Intergalactic Bank API components function in an expected sequence. Check out the [Functional testing collection](https://www.postman.com/templates/f26ad070-d626-4d75-b151-7cbf1a48ed11/Functional-testing) and [Integration testing collection](https://www.postman.com/templates/6f788c17-067a-4074-a528-d07df1df9529/Integration-testing-%23example) for other test cases for this API. \n  \n\n## **🪐 Get started**\n\nThe fictional Intergalactic Bank Services team is responsible for testing the end-to-end workflows in this collection. You can use this collection to validate specific workflows for your team or figure out ways to increase your test coverage and make your applications more resilient.\n\nTo test the Intergalactic Bank API, you can:\n\n1. **Review tests and scripts:** Check out the [tests](https://learning.postman.com/docs/writing-scripts/test-scripts/) in the Scripts tab of a collection, folder, or request. You’ll also find additional steps in the Pre-request Script, such as for passing data between requests or building up POST request payloads.\n    \n2. **Run tests:** To run the collection, select Run collection from the collection menu. If you are interested in testing one of the use cases, select Run folder from the use case folder menu. Keep in mind that many of these tests contain logic that passes information between requests, and they are meant to be run in order from top to bottom. If you send the requests manually or out of order, your results may vary.\n    \n3. **Review test results:** Many of the test cases contain error messages to help debug service errors. If you’re using this collection as a pre-merge check, ensure that all tests are passing before submitting (and no, deleting the failing test cases isn’t an option 😉).\n    \n\nCheck out the additional sections below or select View complete documentation. For context-sensitive help with a folder or request, look for the documentation icon.\n\n## 🧑‍💻How your team can use this collection\n\n- **Add a mock server to speed up development:** Adding functionality to this service? Since this collection has example responses, you can add a mock server that will return the expected results. Start writing tests against the mock, and once your additions are live, you can swap out the URLs and have a live test suite.\n    \n- **Integrate tests with your CI/CD pipeline:** This comprehensive test suite is a great addition to your existing CI/CD pipeline. Generate the Postman CLI command from the Collection Runner and add this step to your existing checks each time you make a commit affecting this service.\n    \n- **Add a monitor:** If your team is contributing to or relying on this service, it’s a good idea to keep tabs on the status. Adding a monitor to this collection can give you confidence that the service is up and running and alert you to any breaking changes that may have occurred.\n    \n\n## 🔍 What we’re testing\n\n- A very common workflow is the transfer of funds between accounts. We have two scenarios: one which creates all resources and successfully transfers funds, and one which tries the transfer with insufficient funds.\n    \n- During these workflows, we are testing for data correctness, data types, and that data is successfully passed through the system during creation and retrieval.\n    \n\n## 🔒A note on authorization\n\nThis API uses an API key-based authorization. In this collection, we set the authorization at the collection level and generate a new API Key for each test run.\n\n## 👀 View and share run results\n\nInterested in seeing previous run results? We’re happy to share, and have a few ways for you to stay in the loop:\n\n- **Runs tab:** View past collection runs in the `Runs` tab of this collection. Here, you can see the results of past runs, including who ran them and whether it was via the Collection Runner or the CLI. You can also share individual run reports from this page.\n    \n- **Monitors:** If you have a monitor set up for this collection, you can see historical run information when you select the Monitors tab in the left sidebar. You can also have the results sent to Slack or other services when you set up a corresponding integration.\n    \n\n### 🤝Increase test coverage\n\nThe Intergalactic Bank Services team wants your team to have everything they need to successfully test our services with their applications. Is your team utilizing this API in a use case not represented here? Reach out to us on our internal Slack by tagging `@bank-services`. Or add an [inline comment](https://learning.postman.com/docs/collaborating-in-postman/working-with-your-team/discussing-your-work/) to this collection with your test case suggestions.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "42975610-7184b2aa-8b7d-437f-8456-c8a5a6d2bc8a"
+	},
+	"item": [
+		{
+			"name": "Process a VALID transaction",
+			"item": [
+				{
+					"name": "[Setup][1] Generate a New API Key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"",
+									"pm.test(\"Should return a object\", function () {",
+									"    pm.expect(response, 'The response is not an object').to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Should contain the `apiKey` property in the response\", function () {",
+									"    pm.expect(response, 'The response does not contain the property').to.haveOwnProperty('apiKey');",
+									"});",
+									"",
+									"pm.test(\"Should return a string for the `apiKey` property\", function () {",
+									"    pm.expect(response.apiKey, 'The property is not a string').to.be.a('string');",
+									"});",
+									"",
+									"// Only set the variable if the response is successful ",
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set('apiKey', response.apiKey);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "c0d36f98-e20f-4636-8872-9b7f76a44478"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "d1324f53-2bd2-47dd-92d7-bebc9fa37c71"
+							}
+						}
+					],
+					"id": "7634b68b-6dc6-40fe-a6c0-a9f2696b7d7f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth"
+							]
+						},
+						"description": "This request generates a new API key and saves it to the collection variables if the request is successful."
+					},
+					"response": [
+						{
+							"id": "86825e6e-3b86-4c8a-b5c6-5f9f2465fe38",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/auth",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:07:35 GMT",
+									"uuid": "aff4a8a5-fbb1-4a1a-9317-2285c030bb85"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "495e8960-ed60-497d-98c9-4ffc262238b6"
+								},
+								{
+									"key": "Content-Length",
+									"value": "43",
+									"uuid": "7ad49249-7e9b-4e73-a196-6e58e9cf7007"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "b25e1d3f-9ce5-45c9-8ac5-33a5f539d056"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "27f036b4-6a8d-43c1-8e55-ac6c533637f5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"apiKey\": \"123456789\"\n}"
+						}
+					]
+				},
+				{
+					"name": "[2] Create A New Account (FromAccount)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Should have a valid JSON format response body\", function () {",
+									"    pm.expect(response).to.not.be.undefined;",
+									"});",
+									"",
+									"pm.test(\"Should have the required 'account' object in the response\", function () {",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response.account).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Should have the `id` property in the account object and is a non-negative integer\", function () {",
+									"  pm.expect(response.account.id).to.be.a('number').and.to.be.at.least(0);",
+									"});",
+									"",
+									"// Only set the variable if the response is successful ",
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"e2e_user_name_from\", JSON.parse(pm.request.body.raw).owner);",
+									"    pm.collectionVariables.set(\"e2e_user_account_id_from\", response.account.id)",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "01e327bb-8537-4ed5-adfe-98f36d79fbab"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate the payload data for the create user request",
+									"",
+									"let fullName = `${pm.variables.replaceIn(\"{{$randomFirstName}}\")} ${pm.variables.replaceIn(\"{{$randomLastName}}\")}`;",
+									"",
+									"let payload = {",
+									"    \"owner\": `${fullName} - FromAccount`,",
+									"    \"balance\": 50,",
+									"    \"currency\": \"COSMIC_COINS\"",
+									"}",
+									"",
+									"// Store the payload in a runtime-only variable ",
+									"pm.variables.set('payload', JSON.stringify(payload));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "727922bd-d9ee-4bd9-86a2-2b237c32909d"
+							}
+						}
+					],
+					"id": "cebc7b58-8ce0-4130-8bc4-605b1b26f73f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{payload}}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						},
+						"description": "Generates a new account (`fromAccount`), that the funds will be transferred from, and saves the following information if the request is successful:\n\n- Account owner from the request body (saved as collection variable `e2e_user_name_from`)\n- Account id from the response body (saved as collection variable `e2e_user_account_id_from`)"
+					},
+					"response": [
+						{
+							"id": "6bfc72b6-c98f-457b-91cc-358ab8f9f533",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{payload}}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:07:48 GMT",
+									"uuid": "4b17fcfc-9fa5-4ab7-b464-b4668660a16c"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "14e48082-7a28-4f4a-b990-43ea32a3af8c"
+								},
+								{
+									"key": "Content-Length",
+									"value": "22",
+									"uuid": "a9a9fbca-d8a9-4360-85b1-1cf126a632dd"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "3f7fc238-95fa-4dfd-a91c-d900bc975514"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "c8f98b63-355f-4a8b-9a18-94ad0f418ca4"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account\": {\n        \"id\": 151\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[3] Create A New Account (ToAccount)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Should have a valid JSON format response body\", function () {",
+									"    pm.expect(response).to.not.be.undefined;",
+									"});",
+									"",
+									"pm.test(\"Should have the required 'account' object in the response\", function () {",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response.account).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Should have the `id` property in the account object and is a non-negative integer\", function () {",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response.account.id).to.be.a('number').and.to.be.at.least(0);",
+									"});",
+									"",
+									"// Only set the variable if the response is successful ",
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"e2e_user_name_to\", JSON.parse(pm.request.body.raw).owner);",
+									"    pm.collectionVariables.set(\"e2e_user_account_id_to\", response.account.id)",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "70eb8ee9-6e2f-4ab7-9887-4c86d3ab5dbc"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate the payload data for the create user request",
+									"",
+									"let fullName = `${pm.variables.replaceIn(\"{{$randomFirstName}}\")} ${pm.variables.replaceIn(\"{{$randomLastName}}\")}`;",
+									"",
+									"let payload = {",
+									"    \"owner\": `${fullName} - ToAccount`,",
+									"    \"balance\": 0,",
+									"    \"currency\": \"COSMIC_COINS\"",
+									"}",
+									"",
+									"// Store the payload in a runtime-only variable ",
+									"pm.variables.set('payload', JSON.stringify(payload));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "4fc39b39-85b9-4abe-86ae-3ddec22f9a29"
+							}
+						}
+					],
+					"id": "91e4ec08-5bd6-48a4-aa74-e3312dfb53f6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{payload}}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						},
+						"description": "Generates another new account (`toAccount`), that the funds will be transferred to, and saves the following information if the request is successful:\n\n- Account owner from the request body (saved as collection variable `e2e_user_name_to`)\n- Account id from the response body (saved as collection variable `e2e_user_account_id_to`)"
+					},
+					"response": [
+						{
+							"id": "a42fae09-8ba5-4972-a7de-c2897bc489f9",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{payload}}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:07:54 GMT",
+									"uuid": "1501f04c-f865-41fb-8fa8-f64fdf997f86"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "e701398a-1062-41eb-8b93-b0a0725a97e7"
+								},
+								{
+									"key": "Content-Length",
+									"value": "22",
+									"uuid": "3d2b6ceb-9a10-4485-bc6b-659135a58b4b"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "88e3a844-2ef2-4bcb-869a-b734f21dc6f8"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "e775d8fa-f881-4afa-b003-4599a508b412"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account\": {\n        \"id\": 152\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[4] Get All User Accounts To Confirm Creation Of Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Should contain an accounts 'array' in the response\", function () {",
+									"    pm.expect(response.accounts).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Should return the correct account data for the `fromAccount` user\", function () {",
+									"    let fromAccount = response.accounts.filter(function (account) {",
+									"        return account.id === parseInt(pm.collectionVariables.get(\"e2e_user_account_id_from\"));",
+									"    });",
+									"    pm.expect(fromAccount[0]).to.be.an(\"object\");",
+									"    pm.expect(fromAccount[0].owner).to.eql(pm.collectionVariables.get(\"e2e_user_name_from\"));",
+									"    pm.expect(fromAccount[0].balance).to.eql(50);",
+									"    pm.expect(fromAccount[0].currency).to.eql(\"COSMIC_COINS\");",
+									"})",
+									"",
+									"pm.test(\"Should return the correct account data for the `toAccount` user\", function () {",
+									"    let toAccount = response.accounts.filter(function (account) {",
+									"        return account.id === parseInt(pm.collectionVariables.get(\"e2e_user_account_id_to\"));",
+									"    });",
+									"    pm.expect(toAccount[0]).to.be.an(\"object\");",
+									"    pm.expect(toAccount[0].owner).to.eql(pm.collectionVariables.get(\"e2e_user_name_to\"));",
+									"    pm.expect(toAccount[0].balance).to.eql(0);",
+									"    pm.expect(toAccount[0].currency).to.eql(\"COSMIC_COINS\");",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "6d57137a-bc30-4377-b3e7-beb5d5e080f4"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "2485d270-798c-4429-bdc6-3c47bd7924ca"
+							}
+						}
+					],
+					"id": "556e1e1b-5e7d-4255-a448-b0e7830906e5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						},
+						"description": "Get a list of all accounts to ensure the accounts were created and saved correctly."
+					},
+					"response": [
+						{
+							"id": "07f426c3-e9f6-4daa-8364-d48de575604c",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:08:07 GMT",
+									"uuid": "06c7f298-d01a-4277-926d-da748e557dbb"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "2c315db9-fb46-4dd2-9289-556ebdb34caf"
+								},
+								{
+									"key": "Content-Length",
+									"value": "263",
+									"uuid": "12b87f86-b226-4220-a0e5-f6c82970ff9d"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "28e2ffb8-8e65-4976-8096-9933bb87848a"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "93efcf5b-2fb3-4ba1-9de4-f1a8771a0705"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accounts\": [\n        {\n            \"id\": 151,\n            \"owner\": \"Ford Paucek - FromAccount\",\n            \"balance\": 50,\n            \"currency\": \"COSMIC_COINS\",\n            \"createdAt\": \"2024-03-11T01:07:48.000Z\"\n        },\n        {\n            \"id\": 152,\n            \"owner\": \"Micah Kovacek - ToAccount\",\n            \"balance\": 0,\n            \"currency\": \"COSMIC_COINS\",\n            \"createdAt\": \"2024-03-11T01:07:54.000Z\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "[5] Create A New Transaction Between The Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Should display a successful transaction message\", function () {",
+									"    pm.expect(response.success).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "0b59d470-c728-4621-94d3-ba82de925155"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "5bd34d22-60ca-429b-9060-57dcf88554fb"
+							}
+						}
+					],
+					"id": "eab441f2-016a-4e6a-841f-da0f05fc0e8f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "1234"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromAccountId\": {{e2e_user_account_id_from}},\n    \"toAccountId\": {{e2e_user_account_id_to}},\n    \"amount\": 20,\n    \"currency\": \"COSMIC_COINS\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions"
+							]
+						},
+						"description": "Create a new transaction between the `fromAccount` and `toAccount`"
+					},
+					"response": [
+						{
+							"id": "85bbc22a-5a2c-4b9b-8f11-654f78af47e2",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "api-key",
+										"value": "1234"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"fromAccountId\": {{e2e_user_account_id_from}},\n    \"toAccountId\": {{e2e_user_account_id_to}},\n    \"amount\": 20,\n    \"currency\": \"COSMIC_COINS\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/transactions",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transactions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:08:15 GMT",
+									"uuid": "4300bc64-9749-40c7-93c5-4bfcab41d240"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "6e1b502c-6acc-431c-a62f-f820cee99d25"
+								},
+								{
+									"key": "Content-Length",
+									"value": "40",
+									"uuid": "4ff46485-691f-4a9d-bf32-3dc00a5302d3"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "4a90a677-349b-469d-9353-53132160cba0"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "d7640c32-b5a3-4c74-bcd7-f3bada455919"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"transaction\": {\n        \"id\": 67\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[6] Get All Transactions To The ToAccount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Should contain a transactions 'array' in the response\", function () {",
+									"    pm.expect(response.transactions).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Should return the correct transaction data for the `toAccount` user\", function () {",
+									"    pm.expect(response.transactions[0]).to.be.an(\"object\");",
+									"    pm.expect(response.transactions[0].id).to.be.an(\"number\");",
+									"    pm.expect(response.transactions[0].createdAt).to.match(/(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}).(\\d{3})Z/);",
+									"    pm.expect(response.transactions[0].fromAccountId).to.eql(pm.collectionVariables.get(\"e2e_user_account_id_from\"));",
+									"    pm.expect(response.transactions[0].toAccountId).to.eql(pm.collectionVariables.get(\"e2e_user_account_id_to\"));",
+									"    pm.expect(response.transactions[0].currency).to.eql(\"COSMIC_COINS\");",
+									"    pm.expect(response.transactions[0].amount).to.eql(20);",
+									"});",
+									"",
+									"if(pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"e2e_transaction_id_to\", response.transactions[0].id)",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "d9acf286-efb8-45e1-8af0-cba757771a4d"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "604ba689-96ee-418d-8c18-f718c483a2e6"
+							}
+						}
+					],
+					"id": "17fd080b-7aff-4d6f-8959-085adc197808",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions?toAccountId={{e2e_user_account_id_to}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "toAccountId",
+									"value": "{{e2e_user_account_id_to}}"
+								}
+							]
+						},
+						"description": "Get a list of all transactions to and from the `toAccount`"
+					},
+					"response": [
+						{
+							"id": "130a73f4-e106-4853-9ae7-a1e11ddcb552",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/transactions?toAccountId={{e2e_user_account_id_to}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "toAccountId",
+											"value": "{{e2e_user_account_id_to}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:08:22 GMT",
+									"uuid": "b656eb8f-2531-4501-9df8-8f401eeec5e2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "ed1456e2-303b-4ba7-9170-4aec04ff1cac"
+								},
+								{
+									"key": "Content-Length",
+									"value": "143",
+									"uuid": "9f30ea1c-3ba4-4f41-821d-aaac786824b1"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "47ce2559-9a1f-4cdb-9bab-8103b1800b49"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "3c3fe056-d3a8-4177-93d3-52efa986b286"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"transactions\": [\n        {\n            \"id\": 67,\n            \"createdAt\": \"2024-03-11T01:08:15.000Z\",\n            \"fromAccountId\": 151,\n            \"toAccountId\": 152,\n            \"currency\": \"COSMIC_COINS\",\n            \"amount\": 20\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "[7] Get A Single Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Should contain a transaction 'object' in the response\", function () {",
+									"    pm.expect(response.transaction).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Should return the correct transaction data for the `toAccount` user\", function () {",
+									"    pm.expect(response.transaction).to.be.an(\"object\");",
+									"    pm.expect(response.transaction.id).to.be.an(\"number\");",
+									"    pm.expect(response.transaction.createdAt).to.match(/(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}).(\\d{3})Z/);",
+									"    pm.expect(response.transaction.fromAccountId).to.eql(pm.collectionVariables.get(\"e2e_user_account_id_from\"));",
+									"    pm.expect(response.transaction.toAccountId).to.eql(pm.collectionVariables.get(\"e2e_user_account_id_to\"));",
+									"    pm.expect(response.transaction.currency).to.eql(\"COSMIC_COINS\");",
+									"    pm.expect(response.transaction.amount).to.eql(20);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "aa912886-6803-4bdb-b417-58e31a68ccf2"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "65b0e0fc-3856-4430-9d72-64655ee7f44b"
+							}
+						}
+					],
+					"id": "41bc65fd-c4e4-42a7-8d29-1e338a6f24bf",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions/:transactionId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								":transactionId"
+							],
+							"variable": [
+								{
+									"key": "transactionId",
+									"value": "{{e2e_transaction_id_to}}"
+								}
+							]
+						},
+						"description": "Get the details of an individual transaction, using the first transaction id from the list of transactions obtained in step \\[6\\]."
+					},
+					"response": [
+						{
+							"id": "ac3fa608-8d33-4695-934a-193f01748455",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/transactions/:transactionId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transactions",
+										":transactionId"
+									],
+									"variable": [
+										{
+											"key": "transactionId",
+											"value": "{{e2e_transaction_id_to}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:08:30 GMT",
+									"uuid": "f4237ade-f760-4d82-842c-c8fb3a609758"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "e0174902-105b-4f97-a926-7e408bba04d7"
+								},
+								{
+									"key": "Content-Length",
+									"value": "140",
+									"uuid": "f9ab2791-deb8-4662-aba2-fac590fe1d96"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "8060c414-1a7c-4771-87db-651aa39b6000"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "08bf5eb8-0bf0-44b5-8407-64d66d41fb66"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"transaction\": {\n        \"id\": 67,\n        \"createdAt\": \"2024-03-11T01:08:15.000Z\",\n        \"fromAccountId\": 151,\n        \"toAccountId\": 152,\n        \"currency\": \"COSMIC_COINS\",\n        \"amount\": 20\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[8] Get Users Current Balance - ToAccount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json(),",
+									"    account_id = parseInt(pm.collectionVariables.get(\"e2e_user_account_id_to\")),",
+									"    owner = pm.collectionVariables.get(\"e2e_user_name_to\");",
+									"",
+									"pm.test(\"Should contain a account 'object' in the response\", function () {",
+									"    pm.expect(response.account).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct account id in the response\", function () {",
+									"    pm.expect(response.account.id).to.eql(account_id);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct owner in the response\", function () {",
+									"    pm.expect(response.account.owner).to.eql(owner);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct balance in the response\", function () {",
+									"    pm.expect(response.account.balance).to.eql(20);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct currency in the response\", function () {",
+									"    pm.expect(response.account.currency).to.eql(\"COSMIC_COINS\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "37994ca7-19d1-4fc5-85e8-f8c461d9d2b7"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "3c990b87-260b-4426-9fdd-720e02480316"
+							}
+						}
+					],
+					"id": "6bfb5a52-f1d1-416c-a5ee-68dc869a0b23",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "{{e2e_user_account_id_to}}"
+								}
+							]
+						},
+						"description": "Confirm the balance of the `toAccount` matches the expected value after the transaction."
+					},
+					"response": [
+						{
+							"id": "0a704f26-24e5-4300-9371-82212ca8074c",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts",
+										":accountId"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "{{e2e_user_account_id_to}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:08:37 GMT",
+									"uuid": "9cc32422-372d-4e60-849f-34a2d0a307a9"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "d3313793-8c1f-41b9-af2c-3bcd453f47f1"
+								},
+								{
+									"key": "Content-Length",
+									"value": "136",
+									"uuid": "77925081-f490-4f8e-b99c-55fa9244fa7f"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "43a78f5c-fd0e-43aa-a51e-e03b931aae19"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "ce949e7f-0b30-4263-89c5-b729a7b290a5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account\": {\n        \"id\": 152,\n        \"owner\": \"Micah Kovacek - ToAccount\",\n        \"balance\": 20,\n        \"currency\": \"COSMIC_COINS\",\n        \"createdAt\": \"2024-03-11T01:07:54.000Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[9] Get Users Current Balance - FromAccount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json(),",
+									"    account_id = parseInt(pm.collectionVariables.get(\"e2e_user_account_id_from\")),",
+									"    owner = pm.collectionVariables.get(\"e2e_user_name_from\");",
+									"",
+									"pm.test(\"Should contain a account 'object' in the response\", function () {",
+									"    pm.expect(response.account).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct account id in the response\", function () {",
+									"    pm.expect(response.account.id).to.eql(account_id);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct owner in the response\", function () {",
+									"    pm.expect(response.account.owner).to.eql(owner);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct balance in the response\", function () {",
+									"    pm.expect(response.account.balance).to.eql(30);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct currency in the response\", function () {",
+									"    pm.expect(response.account.currency).to.eql(\"COSMIC_COINS\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "7bd329d0-01bd-470e-a454-d154c6e9dbdd"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "2695f46f-4539-46cc-9ff1-9ac2c67dba7a"
+							}
+						}
+					],
+					"id": "a3754f24-104f-4e08-b2c1-c2ea30245d01",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "{{e2e_user_account_id_from}}"
+								}
+							]
+						},
+						"description": "Confirm the balance of the `fromAccount` matches the expected value after the transaction."
+					},
+					"response": [
+						{
+							"id": "460c6efd-99c2-436e-abec-4e412291a2ad",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts",
+										":accountId"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "{{e2e_user_account_id_from}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:08:45 GMT",
+									"uuid": "a574a1f8-b575-4a97-a7b5-f07e288f4323"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "27956b33-12f7-4427-a72c-13885157f450"
+								},
+								{
+									"key": "Content-Length",
+									"value": "136",
+									"uuid": "c802cf78-3e9b-48e5-9a34-1564e88ec33b"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "cc84de93-3d9f-4dd1-bdc2-ab753de27fb6"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "c47b1928-d0ff-49e4-b96d-41b8f6dca7fd"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account\": {\n        \"id\": 151,\n        \"owner\": \"Ford Paucek - FromAccount\",\n        \"balance\": 30,\n        \"currency\": \"COSMIC_COINS\",\n        \"createdAt\": \"2024-03-11T01:07:48.000Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[Teardown][10] Delete The User Account - ToAccount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//this request inherits the status check at the folder level."
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "19ab3f34-caef-49a5-8a06-18ae5ab251ed"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "88e8240f-f233-4b86-83a2-1fd9558ecfce"
+							}
+						}
+					],
+					"id": "47dee39c-fc1c-4420-a1eb-1cebc75463e4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "{{e2e_user_account_id_to}}"
+								}
+							]
+						},
+						"description": "Delete the `toAccount` account to clean up after this test case."
+					},
+					"response": [
+						{
+							"id": "025b6de4-d444-4709-a58d-59db0bccf8e7",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{}"
+								},
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/accounts/:accountId",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts",
+										":accountId"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "{{e2e_user_account_id_to}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:08:51 GMT",
+									"uuid": "b0a09c4e-eee2-4adf-87ca-98ba60c31d61"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "4e601311-75d8-413d-b027-29a5c557fab2"
+								},
+								{
+									"key": "Content-Length",
+									"value": "16",
+									"uuid": "8f1a1381-216f-4e6f-b70f-2ab1f82cba5e"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "7d0b695b-888f-4f43-9fce-71e7d0e46849"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "49e84ed1-457d-4bd0-8474-628bfdc856a2"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "[Teardown][11] Delete The User Account - FromAccount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//clean up all variables now that the folder's run is over",
+									"pm.collectionVariables.unset(\"e2e_transaction_id_to\")",
+									"pm.collectionVariables.unset(\"e2e_user_account_id_from\")",
+									"pm.collectionVariables.unset(\"e2e_user_account_id_to\")",
+									"pm.collectionVariables.unset(\"e2e_user_name_from\")",
+									"pm.collectionVariables.unset(\"e2e_user_name_to\")",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "72901c2b-028b-48bb-8254-5381dedbd461"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "f1b1aaad-1b9b-4374-82ba-f6ecb014f806"
+							}
+						}
+					],
+					"id": "60db9c80-e0db-4b4e-86b2-4257828449b7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "{{e2e_user_account_id_from}}"
+								}
+							]
+						},
+						"description": "Delete the `fromAccount` account and clear out the collection variables we created during this test case."
+					},
+					"response": [
+						{
+							"id": "f87f0f3d-5cb6-4239-a5c8-15e915f76121",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/accounts/:accountId",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts",
+										":accountId"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "{{e2e_user_account_id_from}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:09:27 GMT",
+									"uuid": "6436163d-1c71-416d-be31-ced70fffe6cc"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "a050ac9d-7329-4942-ab00-1aa55f8f0b49"
+								},
+								{
+									"key": "Content-Length",
+									"value": "16",
+									"uuid": "4e1740b4-9fdc-4be0-b3e7-233fe3e5295b"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "4d0bda43-8e2a-425b-aae5-d918b1f7ca5b"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "e76fdece-1729-4719-9ede-328e2be11f2d"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true\n}"
+						}
+					]
+				}
+			],
+			"id": "9e4c5f5a-f23a-402d-8626-49f8dc1d03ac",
+			"description": "This folder tests a commonly used workflow of creating new accounts and transferring funds between the two.\n\nBecause we expect all requests to succeed in this workflow, we have a **status check test** in the **folder-level Scripts tab**.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						],
+						"id": "cc25bc6a-21dc-4151-88c9-c028a788717b"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"//all requests in this folder should be valid",
+							"pm.test(\"Folder-level status check\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"id": "c64e932e-cf9b-4f58-834e-7c6a2ec42218"
+					}
+				}
+			]
+		},
+		{
+			"name": "Attempt an INVALID transaction",
+			"item": [
+				{
+					"name": "[Setup][1] Generate a New API Key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"",
+									"pm.test(\"Status check\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return a object\", function () {",
+									"    pm.expect(response, 'The response is not an object').to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Should contain the `apiKey` property in the response\", function () {",
+									"    pm.expect(response, 'The response does not contain the property').to.haveOwnProperty('apiKey');",
+									"});",
+									"",
+									"pm.test(\"Should return a string for the `apiKey` property\", function () {",
+									"    pm.expect(response.apiKey, 'The property is not a string').to.be.a('string');",
+									"});",
+									"",
+									"// Only set the variable if the response is successful ",
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set('apiKey', response.apiKey);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "904f6cb7-6aa9-4263-b02e-34fc9402c56e"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "a909ecfb-3e8c-424c-b3a1-4dac19386240"
+							}
+						}
+					],
+					"id": "21cd7288-508d-4d12-ac3b-0ec9bc8166f9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth"
+							]
+						},
+						"description": "This request generates a new API Key, and saves it to the collection variables if the request was successful."
+					},
+					"response": [
+						{
+							"id": "c38f1f66-e3b5-4863-aeed-65c85f14bb41",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/auth",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:09:56 GMT",
+									"uuid": "cc32fdf2-3ee4-4287-856b-be2e6dd85448"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "6c17aec9-6b5a-4cff-8b6f-cc527ce77f8f"
+								},
+								{
+									"key": "Content-Length",
+									"value": "43",
+									"uuid": "6d6de6d1-eb78-4b43-b8ed-5657e80edd4c"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "2526c9b4-7f28-4345-929b-88c6121bad81"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "5a628b50-16ff-4cbe-bf06-4dc08e9a1610"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"apiKey\": \"123456789\"\n}"
+						}
+					]
+				},
+				{
+					"name": "[2] Create A New Account (FromAccount)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.test(\"Status check\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should have a valid JSON format response body\", function () {",
+									"    pm.expect(response).to.not.be.undefined;",
+									"});",
+									"",
+									"pm.test(\"Should have the required 'account' object in the response\", function () {",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response.account).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Should have the `id` property in the account object and is a non-negative integer\", function () {",
+									"  pm.expect(response.account.id).to.be.a('number').and.to.be.at.least(0);",
+									"});",
+									"",
+									"// Only set the variable if the response is successful ",
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"e2e_user_name_from\", JSON.parse(pm.request.body.raw).owner);",
+									"    pm.collectionVariables.set(\"e2e_user_account_id_from\", response.account.id)",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "539cf7b0-7daa-4fef-970a-590624a430d3"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate the payload data for the create user request",
+									"",
+									"let fullName = `${pm.variables.replaceIn(\"{{$randomFirstName}}\")} ${pm.variables.replaceIn(\"{{$randomLastName}}\")}`;",
+									"",
+									"let payload = {",
+									"    \"owner\": `${fullName} - FromAccount`,",
+									"    \"balance\": 0,",
+									"    \"currency\": \"COSMIC_COINS\"",
+									"}",
+									"",
+									"// Store the payload in a runtime-only variable ",
+									"pm.variables.set('payload', JSON.stringify(payload));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "8af5600e-11d0-4905-b79d-c7bbf52193c7"
+							}
+						}
+					],
+					"id": "8172cecf-05ce-4585-b442-ce028859e02b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{payload}}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						},
+						"description": "Generates a new account (`fromAccount`), that the funds will be transferred from, and saves the following information if the request is successful:\n\n- Account owner from the request body (saved as collection variable `e2e_user_name_from`)\n    \n- Account id from the response body (saved as collection variable `e2e_user_account_id_from`)"
+					},
+					"response": [
+						{
+							"id": "48ee1c65-a2d8-48d4-b5c9-5c07d9793958",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{payload}}"
+								},
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/accounts",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:10:32 GMT",
+									"uuid": "6fb9a265-1c40-461e-bbec-f1d1929601e0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "4a9cd20b-8646-42ad-9dae-eed86bfb20b5"
+								},
+								{
+									"key": "Content-Length",
+									"value": "22",
+									"uuid": "ece191b6-d9c6-41f3-aafb-c40b4855f78b"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "d9b9348b-6b10-4a5b-b182-bf63699ef600"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "11c382dd-7e6d-41ed-9939-11614fbe082e"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account\": {\n        \"id\": 153\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[3] Create A New Account (ToAccount)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Status check\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should have a valid JSON format response body\", function () {",
+									"    pm.expect(response).to.not.be.undefined;",
+									"});",
+									"",
+									"pm.test(\"Should have the required 'account' object in the response\", function () {",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response.account).to.exist;",
+									"});",
+									"",
+									"pm.test(\"Should have the `id` property in the account object and is a non-negative integer\", function () {",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response.account.id).to.be.a('number').and.to.be.at.least(0);",
+									"});",
+									"",
+									"// Only set the variable if the response is successful ",
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"e2e_user_name_to\", JSON.parse(pm.request.body.raw).owner);",
+									"    pm.collectionVariables.set(\"e2e_user_account_id_to\", response.account.id)",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "73f2149d-5971-43e2-beef-447b675fc237"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate the payload data for the create user request",
+									"",
+									"let fullName = `${pm.variables.replaceIn(\"{{$randomFirstName}}\")} ${pm.variables.replaceIn(\"{{$randomLastName}}\")}`;",
+									"",
+									"let payload = {",
+									"    \"owner\": `${fullName} - ToAccount`,",
+									"    \"balance\": 0,",
+									"    \"currency\": \"COSMIC_COINS\"",
+									"}",
+									"",
+									"// Store the payload in a runtime-only variable ",
+									"pm.variables.set('payload', JSON.stringify(payload));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "220c6fd6-1b05-445d-ad59-942827c2a196"
+							}
+						}
+					],
+					"id": "a45b916d-36c9-4c45-833d-43fe4dc5c998",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{payload}}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						},
+						"description": "Generates another new account (`toAccount`), that the funds will be transferred to, and saves the following information if the request is successful:\n\n- Account owner from the request body (saved as collection variable `e2e_user_name_to`)\n    \n- Account id from the response body (saved as collection variable `e2e_user_account_id_to`)"
+					},
+					"response": [
+						{
+							"id": "435b6318-a4aa-49e8-9b09-0524d73d2736",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{payload}}"
+								},
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/accounts",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:10:39 GMT",
+									"uuid": "32b98ad5-7b81-479c-b003-fe14b8a236ad"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "988197cb-6e08-47a0-97a4-6b021ffb6f3e"
+								},
+								{
+									"key": "Content-Length",
+									"value": "22",
+									"uuid": "dc1574f0-f91a-4431-bb88-9cc17fb652c7"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "a862a3fb-af70-415f-a00c-11aadd04cae3"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "788ac390-d784-4359-9b20-0bf284cfabaf"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account\": {\n        \"id\": 154\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[4] Get All User Accounts To Confirm Creation Of Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Status check\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should contain an accounts 'array' in the response\", function () {",
+									"    pm.expect(response.accounts).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Should return the correct account data for the `fromAccount` user\", function () {",
+									"    let fromAccount = response.accounts.filter(function (account) {",
+									"        return account.id === parseInt(pm.collectionVariables.get(\"e2e_user_account_id_from\"));",
+									"    });",
+									"    pm.expect(fromAccount[0]).to.be.an(\"object\");",
+									"    pm.expect(fromAccount[0].owner).to.eql(pm.collectionVariables.get(\"e2e_user_name_from\"));",
+									"    pm.expect(fromAccount[0].balance).to.eql(0);",
+									"    pm.expect(fromAccount[0].currency).to.eql(\"COSMIC_COINS\");",
+									"})",
+									"",
+									"pm.test(\"Should return the correct account data for the `toAccount` user\", function () {",
+									"    let toAccount = response.accounts.filter(function (account) {",
+									"        return account.id === parseInt(pm.collectionVariables.get(\"e2e_user_account_id_to\"));",
+									"    });",
+									"    pm.expect(toAccount[0]).to.be.an(\"object\");",
+									"    pm.expect(toAccount[0].owner).to.eql(pm.collectionVariables.get(\"e2e_user_name_to\"));",
+									"    pm.expect(toAccount[0].balance).to.eql(0);",
+									"    pm.expect(toAccount[0].currency).to.eql(\"COSMIC_COINS\");",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "4fb5f79e-9480-46b8-beb2-3af56e4c1f08"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "fb1848d7-c79f-459b-8083-7bd63f95b00e"
+							}
+						}
+					],
+					"id": "d143d379-2cc2-4a76-85e3-ee89750730ec",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						},
+						"description": "Get a list of all accounts to ensure the accounts were created and saved correctly."
+					},
+					"response": [
+						{
+							"id": "b17ff512-d4c8-4842-b61a-f7cec7f82c3f",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/accounts",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:10:46 GMT",
+									"uuid": "8ad9f86f-fea2-484f-91cd-37441b0a0e0b"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "b0fac381-1d8a-46ca-b484-f3bf01b6de12"
+								},
+								{
+									"key": "Content-Length",
+									"value": "267",
+									"uuid": "7489017c-56a0-45a6-bdef-629f21d2c5fa"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "e133b188-4442-4a1a-a9bc-124a94b3a1b0"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "6af3b87b-66d2-48e0-ba63-de449f412abd"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accounts\": [\n        {\n            \"id\": 153,\n            \"owner\": \"Edyth Wilderman - FromAccount\",\n            \"balance\": 0,\n            \"currency\": \"COSMIC_COINS\",\n            \"createdAt\": \"2024-03-11T01:10:32.000Z\"\n        },\n        {\n            \"id\": 154,\n            \"owner\": \"Waylon Ziemann - ToAccount\",\n            \"balance\": 0,\n            \"currency\": \"COSMIC_COINS\",\n            \"createdAt\": \"2024-03-11T01:10:39.000Z\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "[5] Create A New Transaction with insufficient funds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Should return an error: invalidBody\", function () {",
+									"    pm.expect(response.name).to.equal(\"invalidBody\");",
+									"});",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response.name).to.exist;",
+									"    pm.expect(response.message).to.exist;",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "10441bb4-de60-4e1d-b31e-1fbc4cb7af25"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "dd0a1dcc-d4b8-496f-821e-5dbb35ab1a80"
+							}
+						}
+					],
+					"id": "1945820f-16cb-4cb6-ac2e-a8d357573c76",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "1234"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromAccountId\": {{e2e_user_account_id_from}},\n    \"toAccountId\": {{e2e_user_account_id_to}},\n    \"amount\": 20,\n    \"currency\": \"COSMIC_COINS\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions"
+							]
+						},
+						"description": "Create a new transaction between the `fromAccount` and `toAccount`. We are expecting this to fail as there are insufficient funds in the `fromAccount`."
+					},
+					"response": [
+						{
+							"id": "ec862cd8-215f-4ea1-a5cd-51b2f5a38943",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "api-key",
+										"value": "1234"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"fromAccountId\": {{e2e_user_account_id_from}},\n    \"toAccountId\": {{e2e_user_account_id_to}},\n    \"amount\": 20,\n    \"currency\": \"COSMIC_COINS\"\n}"
+								},
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/transactions",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transactions"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:10:52 GMT",
+									"uuid": "1e9c4836-e4af-42ee-ad3b-8e778d77b629"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "04cc6fb3-6e5d-4846-b6c4-1f27b05c5d5b"
+								},
+								{
+									"key": "Content-Length",
+									"value": "101",
+									"uuid": "951f38d4-fd4e-48c7-bfc5-9e66c99427d9"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "05631adb-f0f8-44db-bb8d-885af0fff370"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "62eb794f-bac9-4ea6-b79a-32bc2c7aa626"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"invalidBody\",\n    \"message\": \"Insufficient balance in fromAccountId to initiate the transaction.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "[6] Get All Transactions To The ToAccount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.test(\"Status check\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should contain an empty transactions 'array' in the response\", function () {",
+									"    pm.expect(response.transactions).to.be.an('array');",
+									"    pm.expect(response.transactions.length).to.equal(0);",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"id": "c8dbc0a0-30f5-4e8e-8acf-998db54a4f9e"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"id": "8c0c9f68-eb58-4529-9e30-97f5299e3a8f"
+							}
+						}
+					],
+					"id": "14d95749-1fd8-490e-9797-2670bc1c668f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions?toAccountId={{e2e_user_account_id_to}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "toAccountId",
+									"value": "{{e2e_user_account_id_to}}"
+								}
+							]
+						},
+						"description": "Get a list of transactions to and from the `toAccount`, and ensure there are no transactions."
+					},
+					"response": [
+						{
+							"id": "9d659caf-7275-4e59-a8c5-5566d4b8ed12",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/transactions?toAccountId={{e2e_user_account_id_to}}",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "toAccountId",
+											"value": "{{e2e_user_account_id_to}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:11:01 GMT",
+									"uuid": "fd2845b5-e990-4f9d-9bd8-8286f128decd"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "e3c9c735-c301-4657-937e-2b08bd1df998"
+								},
+								{
+									"key": "Content-Length",
+									"value": "19",
+									"uuid": "2575f20e-8f10-4fe0-8066-4952aacf08f0"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "daca9a8c-9877-4dd4-bc75-182f601db5ac"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "d7fcd779-f8c5-4b11-b875-52e4786a7cfd"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"transactions\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "[7] Check ToAccount Balance Unchanged",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json(),",
+									"    account_id = parseInt(pm.collectionVariables.get(\"e2e_user_account_id_to\")),",
+									"    owner = pm.collectionVariables.get(\"e2e_user_name_to\");",
+									"",
+									"pm.test(\"Status check\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should contain a account 'object' in the response\", function () {",
+									"    pm.expect(response.account).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct account id in the response\", function () {",
+									"    pm.expect(response.account.id).to.eql(account_id);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct owner in the response\", function () {",
+									"    pm.expect(response.account.owner).to.eql(owner);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct balance in the response\", function () {",
+									"    pm.expect(response.account.balance).to.eql(0);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct currency in the response\", function () {",
+									"    pm.expect(response.account.currency).to.eql(\"COSMIC_COINS\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "42a20c11-259f-4548-91b1-d61677b85f9f"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "256f8e58-fc17-4f7f-b396-e7a73bc4f173"
+							}
+						}
+					],
+					"id": "ee3cd0fa-2c9d-4907-9cc2-beba704d3f89",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "{{e2e_user_account_id_to}}"
+								}
+							]
+						},
+						"description": "Get more information about the `toAccount`, and check that the account balance remains unchanged after the failed transaction."
+					},
+					"response": [
+						{
+							"id": "e249cc79-162f-4107-ae6a-8d2111757e99",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/accounts/:accountId",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts",
+										":accountId"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "{{e2e_user_account_id_to}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:11:09 GMT",
+									"uuid": "10b6f056-c2b2-499a-96ed-e1cff38a7464"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "a33c4e85-e4e4-46c8-866c-d74e3589e194"
+								},
+								{
+									"key": "Content-Length",
+									"value": "136",
+									"uuid": "c0a89cd1-2527-42ba-a206-59beefdd9cbb"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "db44f85c-992f-45a9-ae49-451a4e181c46"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "53b4a50b-175d-400e-ba5d-7f2fff86478d"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account\": {\n        \"id\": 154,\n        \"owner\": \"Waylon Ziemann - ToAccount\",\n        \"balance\": 0,\n        \"currency\": \"COSMIC_COINS\",\n        \"createdAt\": \"2024-03-11T01:10:39.000Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[8] Check FromAccount Balance Unchanged",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json(),",
+									"    account_id = parseInt(pm.collectionVariables.get(\"e2e_user_account_id_from\")),",
+									"    owner = pm.collectionVariables.get(\"e2e_user_name_from\");",
+									"",
+									"pm.test(\"Status check\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should contain a account 'object' in the response\", function () {",
+									"    pm.expect(response.account).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct account id in the response\", function () {",
+									"    pm.expect(response.account.id).to.eql(account_id);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct owner in the response\", function () {",
+									"    pm.expect(response.account.owner).to.eql(owner);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct balance in the response\", function () {",
+									"    pm.expect(response.account.balance).to.eql(0);",
+									"});",
+									"",
+									"pm.test(\"Should contain the correct currency in the response\", function () {",
+									"    pm.expect(response.account.currency).to.eql(\"COSMIC_COINS\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "4d7e0c82-8f92-4bdc-b886-c6e507507c8d"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "65ffec46-1fc6-4faf-b6d7-a627f5bb1784"
+							}
+						}
+					],
+					"id": "3d714929-dedc-4910-8e31-c9927dde6b58",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "{{e2e_user_account_id_from}}"
+								}
+							]
+						},
+						"description": "Get more information about the `fromAccount`, and confirm the balance of the `toAccount` remains unchanged after the failed transaction."
+					},
+					"response": [
+						{
+							"id": "63f1dab7-650f-434f-9e72-a95d6fc083fb",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://template.postman-echo.com/api/v1/accounts/:accountId",
+									"protocol": "https",
+									"host": [
+										"template",
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts",
+										":accountId"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "{{e2e_user_account_id_from}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:11:17 GMT",
+									"uuid": "056246b8-be36-4915-9467-3cdcdd0a88a9"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "fcb97f85-74a5-4a6c-8cbd-e46e0a875f71"
+								},
+								{
+									"key": "Content-Length",
+									"value": "139",
+									"uuid": "b0b5730e-8276-427a-a6ef-b1b0349aaf18"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "0831aeef-9e80-40e3-b041-2dd786e97621"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "cae1f814-b158-40a9-b523-b3d9ccf92bed"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"account\": {\n        \"id\": 153,\n        \"owner\": \"Edyth Wilderman - FromAccount\",\n        \"balance\": 0,\n        \"currency\": \"COSMIC_COINS\",\n        \"createdAt\": \"2024-03-11T01:10:32.000Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "[Teardown][9] Delete The User Account - ToAccount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status check\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "0bd475e1-8cc9-4596-a3a0-f297b2f0b898"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "8a24087c-c92b-4dfb-9ac6-a36682902ae6"
+							}
+						}
+					],
+					"id": "3ed464ff-2796-4a88-9ebd-2811c42ea184",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "{{e2e_user_account_id_to}}"
+								}
+							]
+						},
+						"description": "Delete the `toAccount` account to clean up after this test case."
+					},
+					"response": [
+						{
+							"id": "e03eab30-d9b8-4aea-a22e-57367b3c5ceb",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts",
+										":accountId"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "{{e2e_user_account_id_to}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:11:27 GMT",
+									"uuid": "88340434-d226-4d17-b37b-45cdb72fefba"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "8996425b-a8d1-4b14-965a-ac7748efd050"
+								},
+								{
+									"key": "Content-Length",
+									"value": "16",
+									"uuid": "768fc9a3-a269-4475-9298-d82e439530ec"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "1def55ee-0c06-4451-86ff-0a4843b1bb9d"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "44c19c63-9c68-4ea0-ace0-c972fd678352"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "[Teardown][10] Delete The User Account - FromAccount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status check\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"//clean up all variables now that the folder's run is over",
+									"pm.collectionVariables.unset(\"e2e_transaction_id_to\")",
+									"pm.collectionVariables.unset(\"e2e_user_account_id_from\")",
+									"pm.collectionVariables.unset(\"e2e_user_account_id_to\")",
+									"pm.collectionVariables.unset(\"e2e_user_name_from\")",
+									"pm.collectionVariables.unset(\"e2e_user_name_to\")",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "f57f8c12-b8df-48fe-a1ee-5515f2953be2"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "a999f8e8-f83b-45a8-b8c8-89dafc7fc048"
+							}
+						}
+					],
+					"id": "dc02555c-d8c8-4ed2-b72a-fde004d52594",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":accountId"
+							],
+							"variable": [
+								{
+									"key": "accountId",
+									"value": "{{e2e_user_account_id_from}}"
+								}
+							]
+						},
+						"description": "Delete the `fromAccount` account and clear out the collection variables we created during this test case."
+					},
+					"response": [
+						{
+							"id": "f835eb74-9608-40b2-b0a1-ea4adb847451",
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/accounts/:accountId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"accounts",
+										":accountId"
+									],
+									"variable": [
+										{
+											"key": "accountId",
+											"value": "{{e2e_user_account_id_from}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 11 Mar 2024 01:11:37 GMT",
+									"uuid": "3fac815b-25a0-4c06-bf0e-50750536ed7c"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8",
+									"uuid": "5d6d95f1-4750-4393-ac26-7353c881bdaf"
+								},
+								{
+									"key": "Content-Length",
+									"value": "16",
+									"uuid": "d2f79307-a486-431f-9da4-53153e35f197"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"uuid": "61eb40e5-d172-49b1-9d45-c7ddc77a5db3"
+								},
+								{
+									"key": "uWebSockets",
+									"value": "20",
+									"uuid": "8e789f24-a187-4ccd-82c5-c87b7da21eef"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true\n}"
+						}
+					]
+				}
+			],
+			"id": "ae7ea470-ba90-4b50-946b-f1891658c409",
+			"description": "Note that because we are expecting one of the requests in this folder to be invalid, we are moving the status check from the folder level (as we did in the previous folder) to the request level.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						],
+						"id": "61c5e6e2-6428-4b6b-bd84-4fbf036bfc34"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						],
+						"id": "06084ddb-c1e1-442d-87b7-edef51d9af3d"
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "api-key",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{apiKey}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "7b7862c9-86fc-4db9-91a3-0d1f54eaade7"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "3a031910-381d-4f5c-b9d4-3b1aee739d70"
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "a1cf424f-ee19-4174-a362-c063f359ddca",
+			"key": "baseUrl",
+			"value": "https://template.postman-echo.com",
+			"type": "string"
+		},
+		{
+			"id": "80f16209-2285-4a76-9e1c-9c4699c281ec",
+			"key": "apiKey",
+			"value": "OMpqVWAH.UC80wyXTtPwhDgAUdCTx6"
+		}
+	]
+}
